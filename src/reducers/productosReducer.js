@@ -7,7 +7,10 @@ import {
     MOSTRAR_PRODUCTOS_EXITO,
     OBTENER_PRODUCTO_ELIMINAR,
     PRODUCTO_ELIMINADO_ERROR,
-    PRODUCTO_ELIMINADO_EXITO
+    PRODUCTO_ELIMINADO_EXITO,
+    OBTENER_PRODUCTO_EDITAR,
+    PRODUCTO_EDITADO_EXITO,
+    PRODUCTO_EDITADO_ERROR,
 } from '../types';
 
 // Cada reducer tiene su propio state
@@ -15,7 +18,8 @@ const initialState = {
     productos: [],
     error: null,
     loading: false,
-    idProductoEliminar : null
+    idProductoEliminar : null,
+    productoEditar : []
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -51,7 +55,27 @@ export default function(state = initialState, action) {
                 ...state,
                 loading: true,
                 idProductoEliminar: action.payload
-            }            
+            } 
+        case PRODUCTO_ELIMINADO_EXITO:
+            return{
+                ...state,
+                idProductoEliminar: null,
+                loading: false,
+                productos: state.productos.filter(producto => producto.id !== action.payload),
+            } 
+        case PRODUCTO_ELIMINADO_ERROR: 
+            return{
+                ...state,
+                idProductoEliminar: null,
+                loading: false,
+                error: action.payload
+            }      
+        case OBTENER_PRODUCTO_EDITAR:
+            return{
+                ...state,
+                loading: true,
+                productoEditar: action.payload,
+            }               
         default:
             return state;
     }

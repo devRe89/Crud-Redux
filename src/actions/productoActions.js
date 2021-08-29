@@ -7,7 +7,10 @@ import {
     MOSTRAR_PRODUCTOS_EXITO,
     OBTENER_PRODUCTO_ELIMINAR,
     PRODUCTO_ELIMINADO_ERROR,
-    PRODUCTO_ELIMINADO_EXITO
+    PRODUCTO_ELIMINADO_EXITO,
+    OBTENER_PRODUCTO_EDITAR,
+    PRODUCTO_EDITADO_EXITO,
+    PRODUCTO_EDITADO_ERROR,
 } from '../types';
 
 import axiosClient from '../config/axios';
@@ -16,7 +19,7 @@ import Swal from 'sweetalert2';
 // crear nuevos productos
 export function crearNuevoProductoAction(producto) {
     return async (dispatch) => {
-        
+
         dispatch ( agregarProducto() );
 
         try {
@@ -95,8 +98,27 @@ const mostrarProductosError = estado => ({
 });
 
 export function borrarProductoAction(id) {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch( obteniendoProductoEliminar(id) );
+
+        try {
+            await axiosClient.delete(`/productos/${id}`);
+            dispatch( productoEliminadoExito(id) );
+            Swal.fire(
+                'Correcto',
+                'Producto Eliminado',
+                'success'
+            );
+        } catch (error) {
+            console.log(error);
+            dispatch( productoEliminadoError(true) );
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo un error',
+                text: 'Hubo un error, intenta de nuevo'
+            });
+
+        }
     }
 }
 
@@ -104,3 +126,30 @@ const obteniendoProductoEliminar = id => ({
     type: OBTENER_PRODUCTO_ELIMINAR,
     payload: id
 });
+
+const productoEliminadoExito = id => ({
+    type: PRODUCTO_ELIMINADO_EXITO,
+    payload: id
+});
+
+const productoEliminadoError = estado => ({
+    type: PRODUCTO_ELIMINADO_ERROR,
+    payload: estado,
+});
+
+export function editarProductoAction(id) {
+    return async (dispatch) =>{
+        try {
+            const respuesta = await axiosClient.get(`/productos/${id}`);
+            dispatch( obtenerProductoEditar(respuesta.data) );
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
+const obtenerProductoEditar = producto => ({
+    type: OBTENER_PRODUCTO_EDITAR,
+    payload: producto,
+})
