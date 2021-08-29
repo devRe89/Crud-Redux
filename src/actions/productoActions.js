@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 // crear nuevos productos
 export function crearNuevoProductoAction(producto) {
     return async (dispatch) => {
+        
         dispatch ( agregarProducto() );
 
         try {
