@@ -39,6 +39,11 @@
       "nombre": "Arroz",
       "precio": "76576",
       "id": 8
+    },
+    {
+      "nombre": "Maquetación CSS",
+      "precio": "3000",
+      "id": 9
     }
   ]
 }
