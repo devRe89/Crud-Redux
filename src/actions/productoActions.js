@@ -11,6 +11,7 @@ import {
     OBTENER_PRODUCTO_EDITAR,
     PRODUCTO_EDITADO_EXITO,
     PRODUCTO_EDITADO_ERROR,
+    COMENZAR_EDICION
 } from '../types';
 
 import axiosClient from '../config/axios';
@@ -137,19 +138,52 @@ const productoEliminadoError = estado => ({
     payload: estado,
 });
 
-export function editarProductoAction(id) {
-    return async (dispatch) =>{
+
+
+//Obteniendo datos del producto para mostrar en formulario de edición
+export function obtenerProductoEditar(producto) {
+    return  (dispatch) => {
+        dispatch( obtenerProductoEditarAction(producto) );
+    }
+}
+
+const obtenerProductoEditarAction = producto => ({
+    type:OBTENER_PRODUCTO_EDITAR,
+    payload: producto
+});
+
+export function comenzarEdicionAction(producto){
+    return  async(dispatch) => {
+        dispatch( comenzarEdicion() );
+
         try {
-            const respuesta = await axiosClient.get(`/productos/${id}`);
-            dispatch( obtenerProductoEditar(respuesta.data) );
-            
+            await axiosClient.put(`/productos/${producto.id}`, producto);
+            dispatch( productoEditadoExito() );
+            Swal.fire(
+                'Correcto',
+                'Producto Editado',
+                'success'
+            );
         } catch (error) {
-            console.log(error);
+            dispatch( productoEditadoError(true) )
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo un error',
+                text: 'Hubo un error, intenta de nuevo'
+            });
         }
     }
 }
 
-const obtenerProductoEditar = producto => ({
-    type: OBTENER_PRODUCTO_EDITAR,
-    payload: producto,
-})
+const comenzarEdicion = () => ({
+    type: COMENZAR_EDICION
+});
+
+const productoEditadoExito = () => ({
+    type: PRODUCTO_EDITADO_EXITO
+});
+
+const productoEditadoError = estado => ({
+    type: PRODUCTO_EDITADO_ERROR,
+    payload: estado
+});

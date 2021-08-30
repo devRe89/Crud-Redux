@@ -11,6 +11,7 @@ import {
     OBTENER_PRODUCTO_EDITAR,
     PRODUCTO_EDITADO_EXITO,
     PRODUCTO_EDITADO_ERROR,
+    COMENZAR_EDICION
 } from '../types';
 
 // Cada reducer tiene su propio state
@@ -25,6 +26,7 @@ const initialState = {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function(state = initialState, action) {
     switch(action.type){
+        case COMENZAR_EDICION:
         case OBTENIENDO_PRODUCTOS:
         case AGREGANDO_PRODUCTO:
             return{
@@ -69,13 +71,25 @@ export default function(state = initialState, action) {
                 idProductoEliminar: null,
                 loading: false,
                 error: action.payload
-            }      
+            }   
         case OBTENER_PRODUCTO_EDITAR:
             return{
                 ...state,
-                loading: true,
-                productoEditar: action.payload,
-            }               
+                productoEditar: action.payload
+            }   
+        case PRODUCTO_EDITADO_EXITO:
+            return{
+                ...state,
+                productoEditar:null,
+                loading:false
+            }    
+        case PRODUCTO_EDITADO_ERROR:
+            return{
+                ...state,
+                productoEditar: null,
+                loading: false,
+                error: action.payload
+            }    
         default:
             return state;
     }

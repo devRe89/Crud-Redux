@@ -1,29 +1,14 @@
 {
   "productos": [
     {
-      "id": 2,
-      "nombre": "Jugo de Naranja",
-      "precio": "1"
-    },
-    {
-      "nombre": "Jugo de Fresa",
-      "precio": "200",
-      "id": 5
-    },
-    {
       "nombre": "Arroz",
       "precio": "2000",
       "id": 6
     },
     {
-      "nombre": "Arroz",
-      "precio": "76576",
+      "nombre": "Arroz Blanco",
+      "precio": "45000",
       "id": 8
-    },
-    {
-      "nombre": "Maquetación CSS",
-      "precio": "3000",
-      "id": 9
     }
   ]
 }

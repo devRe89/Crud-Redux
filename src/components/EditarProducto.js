@@ -1,19 +1,44 @@
-import React, {useEffect} from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import { editarProductoAction } from '../actions/productoActions';
+import {comenzarEdicionAction} from '../actions/productoActions';
 
-const EditarProducto = () => {
+const EditarProducto = ({history}) => {
+
+    const [producto, guardarProducto] = useState({
+        nombre: '',
+        precio: 0
+    });
+    const productoEditar = useSelector(state => state.productos.productoEditar);
 
     const dispatch = useDispatch();
-    const {id} = useParams();
 
-    const productoEditar = useSelector(state => state.productos.productoEditar);
-    const {nombre, precio} = productoEditar;
-    useEffect(()=> {
-        const editarProducto = id => dispatch( editarProductoAction(id) );
-        editarProducto(id);
-    },[id]);
+    const confirmarEditar = producto => dispatch( comenzarEdicionAction(producto) );
+    
+    useEffect(() => {
+        guardarProducto(productoEditar);
+    },[productoEditar]);
+    
+    const {nombre, precio, id} = producto;
+
+    const onChangeProducts = e => {
+        guardarProducto({
+            ...producto,
+            [e.target.name]: e.target.value
+        });
+    }
+
+    const editProduct = e => {
+        e.preventDefault();
+
+        if (nombre.trim() === "" || Number(precio) <= 0){
+            return;
+        }
+
+        confirmarEditar(producto);
+
+        history.push('/');
+
+    }
     
     return ( 
         <div className="row justify-content-center">
@@ -24,34 +49,46 @@ const EditarProducto = () => {
                             Editar Producto
                         </h2>
 
-                        <form>
-                            <div className="form-group">
-                                <label>Nombre Producto</label>
-                                <input 
-                                    type="text" 
-                                    className="form-control"
-                                    placeholder="Nombre Producto"
-                                    name="nombre"
-                                    value={nombre}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Precio Producto</label>
-                                <input 
-                                    type="number" 
-                                    className="form-control"
-                                    placeholder="Precio Producto"
-                                    name="precio"
-                                    value={precio}
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="btn btn-primary font-weight-bold text-uppercase d-block w-100"
+                        
+                        
+                            <form
+                                
+                                onSubmit={editProduct}
                             >
-                                Guadar Cambios
-                            </button>
-                        </form>
+                                <div className="form-group">
+                                    <label>Nombre Producto</label>
+                                    <input 
+                                        type="text" 
+                                        className="form-control"
+                                        placeholder="Nombre Producto"
+                                        name="nombre"
+                                        value={nombre}
+                                        onChange={onChangeProducts}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Precio Producto</label>
+                                    <input 
+                                        type="number" 
+                                        className="form-control"
+                                        placeholder="Precio Producto"
+                                        name="precio"
+                                        value={precio} 
+                                        onChange={onChangeProducts}     
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary font-weight-bold text-uppercase d-block w-100"
+                                >
+                                    Guadar Cambios
+                                </button>
+                            </form>
+                           
+                           
+
+        
+
                     </div>
                 </div>
             </div>
